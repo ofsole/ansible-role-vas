@@ -1,2 +1,68 @@
 ---
 # tasks file for ansible-role-vas
+
+- name: get vas version
+  shell: >
+    test -f /opt/quest/bin/vastool && 
+    /opt/quest/bin/vastool -v | 
+    grep vastool | 
+    awk '{print $4}'
+  register: _vas_version
+  changed_when: false
+
+- name: set vas version
+  set_fact:
+    vas_version: "{{ _vas_version.stdout }}"
+
+- name: get vas domain
+  shell: >
+    test -f /opt/quest/bin/vastool && 
+    /opt/quest/bin/vastool info domain
+  register: _vas_domain
+  changed_when: false
+
+- name: set vas domain
+  set_fact:
+    vas_domain: "{{ _vas_domain.stdout }}"
+
+- name: get vas major version
+  shell: >
+    test -f /opt/quest/bin/vastool &&
+    /opt/quest/bin/vastool -v | 
+    grep  vastool | 
+    awk '{print $4}' | 
+    cut -c 1
+  register: _vasmajversion
+  changed_when: false
+
+- name: set vas major version
+  set_fact:
+    vasmajversion: "{{ _vasmajversion }}"
+
+#- name: debug value
+#  debug: msg="{{ vas_domain }}"
+
+- name: install vas package for redhat
+  yum: name="{{item-package_version if package_version else item}" state=present
+  when: ansible_os_family == 'RedHat'
+  with_items:
+    - vasclnt
+    - vasyp
+    - vasgp
+
+- name: install vas package for suse
+  zypper: name:"{{item-package_version if package_version else item}}" state=present
+  when: ansible_os_family == 'Suse'
+  with_items:
+    - vasclnt
+    - vasyp
+    - vasgp
+
+- name: install vas package for Ubuntu
+  apt: name="{{item-package_version if package_version else item}}" state=present
+  when: ansible_os_family == 'Debian'
+  with_items:
+    - vasclnt
+    - vasyp
+    - vasgp
+
