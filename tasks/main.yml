@@ -40,10 +40,14 @@
     vasmajversion: "{{ _vasmajversion }}"
 
 #- name: debug value
-#  debug: msg="{{ vas_domain }}"
+#  debug: msg="{{ item + '-' + package_version }}"
+#  with_items:
+#    - vasclnt
+#    - vasyp
+#    - vasgp
 
 - name: install vas package for redhat
-  yum: name="{{item-package_version if package_version else item}" state=present
+  yum: name="{{ item + '-' + package_version if package_version else item}" state=present
   when: ansible_os_family == 'RedHat'
   with_items:
     - vasclnt
@@ -51,7 +55,7 @@
     - vasgp
 
 - name: install vas package for suse
-  zypper: name:"{{item-package_version if package_version else item}}" state=present
+  zypper: name:"{{ item + '-' + package_version if package_version else item}}" state=present
   when: ansible_os_family == 'Suse'
   with_items:
     - vasclnt
@@ -59,10 +63,69 @@
     - vasgp
 
 - name: install vas package for Ubuntu
-  apt: name="{{item-package_version if package_version else item}}" state=present
+  apt: name="{{ item + '-' + package_version if package_version else item}}" state=present
   when: ansible_os_family == 'Debian'
   with_items:
     - vasclnt
     - vasyp
     - vasgp
 
+- name: vas.conf config
+  template:
+    dest: "{{vas_config_path}}"
+    owner: "{{vas_config_owner}}"
+    group: "{{vas_config_group}}"
+    mode: "{{vas_config_mode}}}"
+    src: 'vas.conf.j2'
+
+- name: users.allow config
+  template:
+    dest: "{{vas_users_allow_path}}"
+    src: 'users.allow.j2'
+    owner: "{{vas_users_allow_owner}}"
+    group: "{{vas_users_allow_group}}"
+    mode: "{{vas_users_allow_mode}}"
+
+- name: users.deny config
+  template:
+    dest: "{{vas_users_deny_path}}"
+    src: 'users.deny.j2'
+    owner: "{{vas_users_deny_owner}}"
+    group: "{{vas_users_deny_group}}"
+    mode: "{{vas_users_deny_mode}}"
+
+- name: user-override config
+  template:
+    dest: "{{vas_user_override_path}}"
+    src: 'user-override.j2'
+    owner: "{{vas_user_override_owner}}"
+    group: "{{vas_user_override_group}}"
+    mode: "{{vas_user_override_mode}}"
+
+- name: group-override config
+  template:
+    dest: "{{vas_group_override_path}}"
+    src: 'group-override.j2'
+    owner: "{{vas_group_override_owner}}"
+    group: "{{vas_group_override_group}}"
+    mode: "{{vas_group_override_mode}}"
+
+- name: keytab manage
+  copy:
+    owner: "{{keytab_owner}}"
+    group: "{{keytab_group}}"
+    mode: "{{keytab_mode}}"
+    src: "{{keytab_source}}"
+    dest: "{{keytab_path}}"
+
+- name: serviced vasd config
+  service:
+    name: 'vasd'
+    enabled: yes
+    state: started
+
+- name: serviced vasypd config
+  service:
+    name: 'vasypd'
+    enabled: yes
+    state: started

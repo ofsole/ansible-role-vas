@@ -53,7 +53,7 @@ vas_conf_pam_vas_prompt_ad_lockout_msg: ''
 vas_conf_libdefaults_forwardable: true
 vas_conf_vas_auth_uid_check_limit: ''
 vas_conf_libvas_vascache_ipc_timeout: 15
-vas_conf_libvas_use_server_referrals: {{ false if vas_version | version_compare(vas_conf_libvas_use_server_referrals_version_switch, ‘>=’) else true }}
+vas_conf_libvas_use_server_referrals: "{{ false if vas_version | version_compare(vas_conf_libvas_use_server_referrals_version_switch, ‘>=’) else true }}"
 vas_conf_libvas_use_server_referrals_version_switch: '4.1.0.21518'
 vas_conf_libvas_auth_helper_timeout: 10
 vas_conf_libvas_mscldap_timeout: 1
@@ -88,3 +88,4 @@ symlink_vastool_binary_target: '/usr/bin/vastool'
 symlink_vastool_binary: false
 license_files: ''
 domain_realms: {}
+keytab_source: 'vasinst.key'
