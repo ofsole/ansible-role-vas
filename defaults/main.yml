@@ -3,7 +3,7 @@
 #_package_version: 4.1.0-21518
 #package_version: "{{ _package_version | regex_replace('-', '.')}}"
 once_file: '/etc/opt/quest/vas/puppet_joined'
-package_version: ''
+package_version: '4.1.0-21518'
 enable_group_policies: true
 users_allow_entries: []
 users_deny_entries: []
@@ -19,12 +19,16 @@ computers_ou: ''
 users_ou: ''
 nismaps_ou: ''
 user_search_path: ''
+user_search_path_parm: "{{ '-u ' + user_search_path if user_search_path else ''}}"
 group_search_path: ''
+user_search_path_parm: "{{ '-g ' + user_search_path if user_search_path else ''}}"
 upm_search_path: "{{ users_ou }}"
+upm_search_path_parm: "{{ '-p ' + upm_search_path if upm_search_path else ''}}"
 nisdomainname: ''
 realm: 'realm.example.com'
 domain_change: false
 sitenameoverride: ''
+s_opts: "{{ '-s ' + sitenameoverride if sitenameoverride else ''}}"
 vas_conf_client_addrs: ''
 vas_conf_full_update_interval: ''
 vas_conf_group_update_mode: ''
@@ -41,6 +45,7 @@ vas_conf_vasd_cross_domain_user_groups_member_search: ''
 vas_conf_vasd_password_change_script: ''
 vas_conf_vasd_password_change_script_timelimit: ''
 vas_conf_vasd_workstation_mode: false
+workstation_flag: "{{ '-w' if vas_conf_vasd_workstation_mode else ''}}"
 vas_conf_vasd_workstation_mode_users_preload: ''
 vas_conf_vasd_workstation_mode_group_do_member: false
 vas_conf_vasd_workstation_mode_groups_skip_update: false
@@ -87,5 +92,5 @@ vastool_binary: '/opt/quest/bin/vastool'
 symlink_vastool_binary_target: '/usr/bin/vastool'
 symlink_vastool_binary: false
 license_files: ''
-domain_realms: {}
+domain_realms: { "{{vas_fqdn}}": "{{realm}}" }
 keytab_source: 'vasinst.key'

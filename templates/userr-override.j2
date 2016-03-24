@@ -1,0 +1,9 @@
+# This file is being maintained by Puppet.
+# DO NOT EDIT
+{% if user_override_entries %}
+{% for overrideentry in user_override_entries %}
+{% if overrideentry %}
+{{overrideentry}}
+{% endif %}
+{% endfor %}
+{% endif %}

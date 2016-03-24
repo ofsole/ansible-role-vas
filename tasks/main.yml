@@ -8,6 +8,7 @@
     grep vastool | 
     awk '{print $4}'
   register: _vas_version
+  ignore_errors: yes
   changed_when: false
 
 - name: set vas version
@@ -19,6 +20,7 @@
     test -f /opt/quest/bin/vastool && 
     /opt/quest/bin/vastool info domain
   register: _vas_domain
+  ignore_errors: yes
   changed_when: false
 
 - name: set vas domain
@@ -47,7 +49,7 @@
 #    - vasgp
 
 - name: install vas package for redhat
-  yum: name="{{ item + '-' + package_version if package_version else item}" state=present
+  yum: name="{{ item + '-' + package_version if package_version else item}}" state=present
   when: ansible_os_family == 'RedHat'
   with_items:
     - vasclnt
@@ -55,7 +57,7 @@
     - vasgp
 
 - name: install vas package for suse
-  zypper: name:"{{ item + '-' + package_version if package_version else item}}" state=present
+  zypper: name="{{ item + '-' + package_version if package_version else item}}" state=present
   when: ansible_os_family == 'Suse'
   with_items:
     - vasclnt
@@ -129,3 +131,22 @@
     name: 'vasypd'
     enabled: yes
     state: started
+
+- name: vas installing...
+  shell: >
+    "{{vastool_binary}}" -u "{{username}}" -k "{{keytab_path}}"
+    -d3 join -f "{{workstation_flag}}" -c "{{computers_ou}}" 
+    "{{user_search_path_parm}}" "{{group_search_path_parm}}" 
+    "{{upm_search_path_parm}}" -n "{{vas_fqdn}}" 
+    "{{s_opts}}" "{{realm}}" > "{{vasjoin_logfile}}" 2>&1 &&
+    touch "{{once_file}}"
+  args:
+    executable: '/sbin:/bin:/usr/bin:/opt/quest/bin'
+    creates: "{{once_file}}"
+
+- name: symlink for vastool
+  file:
+    state: link
+    src: "{{vastool_binary}}"
+    dest: "{{symlink_vastool_binary_target}}"
+  when: symlink_vastool_binary

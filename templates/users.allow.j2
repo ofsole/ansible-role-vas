@@ -1,0 +1,9 @@
+# This file is being maintained by Puppet.
+# DO NOT EDIT
+{% if users_allow_entries %}
+{% for allowentry in users_allow_entries %}
+{% if allowentry %}
+{{ allowentry }}
+{% endif %}
+{% endfor %}
+{% endif %}
