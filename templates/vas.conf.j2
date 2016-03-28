@@ -35,5 +35,101 @@
  prompt-ad-lockout-msg = "{{vas_conf_pam_vas_prompt_ad_lockout_msg}}"
 {% endif %}
 
+[vasypd]
+ search-base = {{nismaps_ou}}
+ split-groups = true
+ update-interval = 1800
+ domainname-override = {{nisdomainname}}
+{% if vas_conf_update_process %}
+ update-process = {{vas_conf_update_process}}
+{% endif %}
+{% if vas_conf_full_update_interval %}
+ full-update-interval = {{vas_conf_full_update_interval}}
+{% endif %}
+{% if vas_conf_client_addrs %}
+ client-addrs = {{vas_conf_client_addrs}}
+{% endif %}
 
+[vasd]
+ update-interval = {{vas_conf_vasd_update_interval}}
+{% if upm_search_path %}
+ upm-search-path = {{upm_search_path}}
+{% endif %}
+ workstation-mode = {{vas_conf_vasd_workstation_mode}}
+{% if vas_conf_vasd_workstation_mode %}
+{% if vas_conf_vasd_workstation_mode_users_preload %}
+ workstation-mode-users-preload = {{vas_conf_vasd_workstation_mode_users_preload}}
+{% endif %}
+ workstation-mode-group-do-member = {{vas_conf_vasd_workstation_mode_group_do_member}}
+ workstation-mode-groups-skip-update = {{vas_conf_vasd_workstation_mode_groups_skip_update}}
+ ws-resolve-uid = {{vas_conf_vasd_ws_resolve_uid}}
+{% endif %}
+{% if user_search_path %}
+ user-search-path = {{user_search_path}}
+{% endif %}
+{% if group_search_path %}
+ group-search-path = {{group_search_path}}
+{% endif %}
+{% if vas_user_override_path %}
+ user-override-file = {{vas_user_override_path}}
+{% endif %}
+{% if vas_group_override_path %}
+ group-override-file = {{vas_group_override_path}}
+{% endif %}
+ auto-ticket-renew-interval = {{vas_conf_vasd_auto_ticket_renew_interval}}
+ lazy-cache-update-interval = {{vas_conf_vasd_lazy_cache_update_interval}}
+{% if vas_conf_vasd_cross_domain_user_groups_member_search %}
+ cross-domain-user-groups-member-search = {{vas_conf_vasd_cross_domain_user_groups_member_search}}
+{% endif %}
+{% if vas_conf_vasd_timesync_interval %}
+ timesync-interval = {{vas_conf_vasd_timesync_interval}}
+{% endif %}
+{% if vas_conf_preload_nested_memberships %}
+ preload-nested-memberships = {{vas_conf_preload_nested_memberships}}
+{% endif %}
+{% if vas_conf_upm_computerou_attr %}
+ upm-computerou-attr = {{vas_conf_upm_computerou_attr}}
+{% endif %}
+{% if vas_conf_vasd_password_change_script %}
+ password-change-script = {{vas_conf_vasd_password_change_script}}
+{% endif %}
+{% if vas_conf_vasd_password_change_script_timelimit %}
+ password-change-script-timelimit = {{vas_conf_vasd_password_change_script_timelimit}}
+{% endif %}
+{% if vas_conf_vasd_deluser_check_timelimit %}
+ deluser-check-timelimit = {{vas_conf_vasd_deluser_check_timelimit}}
+{% endif %}
+{% if vas_conf_vasd_delusercheck_interval %}
+ delusercheck-interval = {{vas_conf_vasd_delusercheck_interval}}
+{% endif %}
+{% if vas_conf_vasd_delusercheck_script %}
+ delusercheck-script = {{vas_conf_vasd_delusercheck_script}}
+{% endif %}
 
+[nss_vas]
+{% if vas_conf_group_update_mode %}
+ group-update-mode = {{vas_conf_group_update_mode}}
+{% endif %}
+{% if vas_conf_root_update_mode %}
+ root-update-mode = {{vas_conf_root_update_mode}}
+{% endif %}
+{% if vas_conf_disabled_user_pwhash %}
+ disabled-user-pwhash = {{vas_conf_disabled_user_pwhash}}
+{% endif %}
+{% if vas_conf_locked_out_pwhash %}
+ locked-out-pwhash = {{vas_conf_locked_out_pwhash}}
+{% endif %}
+{% if vas_conf_lowercase_names %}
+ lowercase-names = {{vas_conf_lowercase_names}}
+{% endif %}
+{% if vas_conf_lowercase_homedirs %}
+ lowercase-homedirs = {{vas_conf_lowercase_homedirs}}
+{% endif %}
+
+[vas_auth]
+{% if vas_users_allow_path %}
+ users-allow-file = {{vas_users_allow_path}}
+{% endif %}
+{% if vas_conf_vas_auth_uid_check_limit %}
+ uid-check-limit = {{vas_conf_vas_auth_uid_check_limit}}
+{% endif %}
